@@ -1,2 +1,3 @@
 # UNMRobotics
-This repository will be used for the CS team of the UNM Robotics Club
+
+This is a description of SARA(six axis robot arm)
