@@ -3,6 +3,7 @@
 using namespace std;
 #include<string>
 #include<cmath>
+#include<iostream>
 class Arm
 {
 	private:
@@ -15,6 +16,7 @@ class Arm
 			double aVoltageMx;
 			double aCurrent;//units of Amps
 			double aWeight;//units of kilograms
+			double aInertia;
 			struct actuator *next;//used to link motors together
 		};
 		struct actuator *aBegin;//initializes a starting motor
@@ -34,16 +36,22 @@ class Arm
 		int DOF;//the number of unique motions in the arm system
 		double payload;//units of kilograms
 		double minSpeed;//units of meters per second
+		double CoMArm; //center of mass from the base
+		double holdingTorque; //The calculated holding torque of the shoulder joint
+		double grShoulderHolding; //The minimum gear ratio of the shoulder joint to hold the weight of the payload and arm straight out
+
 
 
 	public:
-		Arm(){envelope=0.0,DOF=0,payload=0.0,minSpeed=0.0,aBegin= NULL,jBegin = NULL;}
+		Arm(){envelope=0.0,DOF=0,payload=0.0,minSpeed=0.0,aBegin= NULL,jBegin = NULL,CoMArm=0,holdingTorque=0;}//initializes all relevant values to zero so the generalInfo function knows what to alert about
 		void setEnvelope(double n_envelope){envelope=n_envelope;}//set functions initialize the private variables when the function and parameter are called
 		void setDOF(int n_dof){DOF=n_dof;}
 		void setPayload(double n_payload){payload=n_payload;}
 		void setMinSpeed(double n_minSpeed){minSpeed = n_minSpeed;}
+		void setCoM(double COM){CoMArm = COM;}
 
-		void GeneralInfo();//Face value info such as dof, motors, weight, envelope, etc.
+
+		void GeneralInfo(Arm &arm);//Face value info such as dof, motors, weight, envelope, etc.
 		void CalculatedInfo(){}//calculated torque, gear ratio, etc.
 
 		int numActuators();//returns the number of motors in the system
@@ -54,6 +62,7 @@ class Arm
 		void addJoint(string name, int num, double length,double weight,string material);
 		bool lengthContinuity();//checks to make sure that the length of all the arms matches the envelope
 		bool dofContinuity();//checks to make sure the dof matches the number of actuators
+		void CalcHoldingTorque(int motorNum);
 
 
 

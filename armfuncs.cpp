@@ -155,12 +155,35 @@ bool Arm::dofContinuity()
 		return false;
 	}
 }
-//function for returning general info of the arm(not the mathy shit).
-//Intentions are to make it so this function returns all the provided information to an ofile
-//It was also output the missing variables the user needs to still input for the calculating functions to start
-void Arm::GeneralInfo()
+//The importance of calculating holding torque is that it sets the minimum torque required from a motor to hold up weight
+//
+void Arm::CalcHoldingTorque(int motorNum)
 {
-	cout<<"### GENERAL INFO ###\n\n"<<endl;
+	double t = 0; //temp total torque
+	double gr = 0; //gear ratio, gear ratio = outputT / inT
+	double mA = 0; //mass of Arm
+	double a = 9.8; //acceleration of gravity 9.8m/s^2
+	struct joint *ptr = jBegin;
+	while(ptr != NULL){//adds up the weight of all the joints
+		mA += ptr->jWeight;
+		ptr=ptr->next;
+	}
+	struct actuator *ptr2 = aBegin;
+	while(ptr2->aNum != motorNum+1){//points the pointer to the starting motor. Prevents total Mass from including any motor before the wanted motorNum
+		ptr=ptr->next;
+	}
+	while(ptr2 != NULL){//adds up the weight of all the motors
+		mA += ptr2->aWeight;
+		ptr2 = ptr2->next;
+	}
+	t = (payload*a*envelope)+(a*mA*CoMArm);//adds up the torques of both the payload torque and the arm torque from center of mass
 
-};
+	holdingTorque = t; //sets holding Torque to calculated total torque
+	struct actuator *ptr3 = aBegin;
+	while(ptr3->aNum != 2){//searches for second motor which would be shoulder joint
+		ptr3=ptr3->next;
+	}
+	gr = t/(ptr3->aNum);//calculates gear ratio 
+	grShoulderHolding = gr;
 
+}
