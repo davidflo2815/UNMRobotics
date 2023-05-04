@@ -1,23 +1,25 @@
-#include "arm.h"
+#include "robotarm.h"
 
 //function for returning general info of the arm(not the mathy shit).
 //Intentions are to make it so this function returns all the provided information to an ofile
 //It was also output the missing variables the user needs to still input for the calculating functions to start
 
-void Arm::GeneralInfo(Arm &arm)
+void RobotArm::GeneralInfo(RobotArm &arm)
 {
-	cout<<"\t\t### GENERAL INFO ###\n\n"<<endl;
+	cout<<"------------------### GENERAL INFO ###------------------\n\n"<<endl;
+
 	cout<<"Degrees of Freedom: "<<arm.DOF<<endl;
-	cout<<"Envelope(meters): "<<arm.envelope<<endl;
-	cout<<"Payload(Kilograms): "<<arm.payload<<endl;
-	cout<<"minimun Speed(Meters per Second): "<<arm.minSpeed<<endl;
-	cout<<"Center of Mass of Arm(Meters): "<<arm.CoMArm<<endl;
-	cout<<"\n\t\t# Motor Info #\n\n"<<endl;
-	struct actuator *ptr = aBegin;
+	cout<<"Envelope: "<<arm.envelope<<" m"<<endl;
+	cout<<"Payload: "<<arm.payload<<" kg"<<endl;
+	cout<<"minimun Speed: "<<arm.minSpeed<<" m/s"<<endl;
+	cout<<"Center of Mass of Arm: "<<arm.CoMArm<<" m"<<endl;
+	cout<<"\n\n------------------# Motor Info #------------------------\n\n"<<endl;
+	struct motor *ptr = mBegin;
 	while(ptr != NULL){
-		cout<<"Motor Name: "<<ptr->aName<<"\tMotor Number: "<<ptr->aNum<<endl;
-		cout<<"Motor Weight: "<<ptr->aWeight<<"\tMotor Base Torque: "<<ptr->aTorque<<endl;
-		cout<<"Minimum Voltage: "<<ptr->aVoltageMn<<"\tMaximum Voltage: "<<ptr->aVoltageMx<<"\tMotor Current: "<<ptr->aCurrent<<endl;
+		cout<<"Motor Name: "<<ptr->mName<<"\tMotor Number: "<<ptr->mNum<<endl;
+		cout<<"Motor Weight: "<<ptr->mWeight<<" kg\tMotor Base Torque: "<<ptr->mTorque<<" Nm"<<endl;
+		cout<<"Minimum Voltage: "<<ptr->mVoltageMn<<" V\tMaximum Voltage: "<<ptr->mVoltageMx<<" V\tMotor Current: "<<ptr->mCurrent<<" a\n\n"<<endl;
+		ptr=ptr->next;
 	}
 
 
