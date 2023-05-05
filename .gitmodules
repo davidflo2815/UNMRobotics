@@ -1,3 +1,6 @@
 [submodule "GeneralCode"]
 	path = Hovercraft
 	url = https://github.com/Veloraxzia-Tenebris/GeneralCode/
+[submodule "Hovercraft"]
+	path = Hovercraft
+	url = https://github.com/Veloraxzia-Tenebris/GeneralCode.git
