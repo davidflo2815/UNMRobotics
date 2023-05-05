@@ -39,7 +39,7 @@ string RobotArm::motorAt(int num)
 		}
 	}
 
-	string inf = "Motor name: "+ptr->mName+"\nTorque: "+to_string(ptr->mTorque)+" Nm,\tRPM: "+to_string(ptr->mRPM);
+	string inf = "Motor name: "+ptr->mName+"\tMotor num: "+to_string(ptr->mNum)+"\tTorque: "+to_string((float)ptr->mTorque)+" Nm\nMin Voltage: "+to_string(ptr->mVoltageMn)+" V\tmax Voltage: "+to_string(ptr->mVoltageMx)+" V\tOperating Current: "+to_string(ptr->mCurrent);
 	return inf;
 };
 //find the specs of the joint at a certain position
@@ -55,7 +55,7 @@ string RobotArm::armAt(int num)
 			break;
 		}
 	}
-	string inf = "Arm Number: "+to_string(ptr->aNum)+"\nArm Length: "+to_string(ptr->aLength)+",\tArm Weight: "+to_string(ptr->aWeight)+",\tArm Material: "+ptr->aMaterial;
+	string inf = "Arm Number: "+to_string(ptr->aNum)+"Arm Name: "+ptr->aName+"\nArm Length: "+to_string(ptr->aLength)+",\tArm Weight: "+to_string(ptr->aWeight)+",\tArm Material: "+ptr->aMaterial;
 	return inf;
 };
 //adds an motor to the linked list of motors
@@ -122,35 +122,38 @@ void RobotArm::addArm(string name, int num, double length,double weight,string m
 		ptr->next = a;
 	}
 };
+//finds total length of all arms given
+double RobotArm::totalLength(){
+	double totalL = 0.0;
+	struct arm *ptr = aBegin;
+	while(ptr != NULL){
+		totalL += ptr->aLength;
+		ptr=ptr->next;
+	}
+	return totalL;
+}
+
+
 //checks to make sure the lengths of all the arms matches the total envelope
 //use in getGeneralInfo
 bool RobotArm::lengthContinuity()
 {
-	struct arm *ptr = aBegin;
-	double totalLength = 0.0;
 	double precision = .05;
-	while(ptr != NULL){
-		totalLength += ptr->aLength;
-		ptr=ptr->next;
-	}
-	if((envelope-precision)<=totalLength<=(envelope+precision)){
+	if((envelope-precision)<=totalLength() && totalLength()<=(envelope+precision)){
 		return true;
 	}else{
 		return false;
 	}
 	
 }
+//counts the number of motors
+
 //checks to make sure enough motors were provided for the desired DOF
 //use in getGeneralInfo
+
 bool RobotArm::dofContinuity()
 {
-	struct motor *ptr = mBegin;
-	int totalMotors = 0;
-	while(ptr != NULL){
-		totalMotors += 1;
-		ptr=ptr->next;
-	}
-	if(DOF == totalMotors){
+	if(DOF == numMotors()){
 		return true;
 	}else{
 		return false;

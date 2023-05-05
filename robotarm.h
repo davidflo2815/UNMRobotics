@@ -4,6 +4,8 @@ using namespace std;
 #include<string>
 #include<cmath>
 #include<iostream>
+#include<fstream>
+
 class RobotArm
 {
 	private:
@@ -60,6 +62,7 @@ class RobotArm
 		string armAt(int num);//returns the information of the joint at a specific place
 		void addMotor(string name,int num,double weight,double torque,double RPM,double voltageMin,double voltageMax,double currentRating,double inertia);
 		void addArm(string name, int num, double length,double weight,string material);
+		double totalLength();
 		bool lengthContinuity();//checks to make sure that the length of all the arms matches the envelope
 		bool dofContinuity();//checks to make sure the dof matches the number of actuators
 		void CalcHoldingTorque(int motorNum);
